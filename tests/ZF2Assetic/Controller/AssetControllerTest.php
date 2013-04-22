@@ -4,7 +4,8 @@ namespace ZF2AsseticTest\Controller;
 
 use ZF2Assetic\Controller\AssetController;
 
-use Assetic\AssetManager;
+use Assetic\AssetManager,
+    Assetic\Asset\StringAsset;
 
 use Zend\Http\Request,
     Zend\Mvc\MvcEvent,
@@ -41,6 +42,28 @@ class AssetControllerTestCase extends TestCase
     public function testControllerIsAssetManagerAware()
     {
         $this->assertInstanceOf('ZF2Assetic\AssetManagerAwareInterface', $this->controller);
+    }
+
+    public function testKnownAssetReturnsContent()
+    {
+        $css          = '.hidden {display: none;}';
+        $asset        = new StringAsset($css);
+        $lastModified = strtotime('2013-04-22 18:12:23');
+        $asset->setLastModified($lastModified);
+        $this->assetManager->set('base_css', $asset);
+
+        $this->routeMatch->setParam('collection', 'base_css');
+        $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals($css, $response->getContent());
+
+        $headers = $response->getHeaders();
+        $this->assertTrue($headers->has('Last-Modified'));
+
+        $header = $headers->get('Last-Modified');
+        $this->assertEquals(strtotime($header->getFieldValue()), $lastModified);
     }
 }
 

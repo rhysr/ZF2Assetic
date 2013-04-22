@@ -14,12 +14,20 @@ class AssetController extends AbstractActionController implements AssetManagerAw
 
     public function indexAction()
     {
+        $response = $this->getResponse();
+
         $collectionName = $this->params()->fromRoute('collection');
         if (!$this->assetManager->has($collectionName)) {
-            $response = $this->getResponse();
             $response->setStatusCode(404);
+            return;
         }
+
+        $collection = $this->assetManager->get($collectionName);
+        $response->setContent($collection->dump());
+        $response->getHeaders()->addHeaderLine('Last-Modified', '@' . $collection->getLastModified());
+
+
+        return $response;
     }
 }
-
 
