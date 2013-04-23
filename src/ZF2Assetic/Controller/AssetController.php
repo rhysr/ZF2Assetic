@@ -5,12 +5,14 @@ namespace ZF2Assetic\Controller;
 use ZF2Assetic\AssetManagerAwareTrait,
     ZF2Assetic\AssetManagerAwareInterface;
 
+use Assetic\AssetManager;
+
 use Zend\Mvc\Controller\AbstractActionController;
 
 
 class AssetController extends AbstractActionController implements AssetManagerAwareInterface
 {
-    use AssetManagerAwareTrait;
+    protected $assetManager;
 
     public function indexAction()
     {
@@ -28,6 +30,12 @@ class AssetController extends AbstractActionController implements AssetManagerAw
 
 
         return $response;
+    }
+
+    public function setAssetManager(AssetManager $assetManager)
+    {
+        $this->assetManager = $assetManager;
+        return $this;
     }
 }
 
