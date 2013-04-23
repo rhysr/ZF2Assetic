@@ -21,6 +21,9 @@
         "psr-0": {
             "ZF2Assetic\\": "src/",
             "ZF2AsseticTest\\": "tests/"
-        }
+        },
+        "classmap": [
+            "./"
+        ]
     }
 }
