@@ -16,5 +16,11 @@
     },
     "require-dev": {
         "phpunit/phpunit": "3.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "ZF2Assetic\\": "src/",
+            "ZF3AsseticTest\\": "tests/"
+        }
     }
 }
