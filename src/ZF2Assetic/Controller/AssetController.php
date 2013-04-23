@@ -14,20 +14,46 @@ class AssetController extends AbstractActionController implements AssetManagerAw
 {
     protected $assetManager;
 
+    protected $config = array();
+
+    protected $contentTypeMap = array();
+
     public function indexAction()
     {
         $response = $this->getResponse();
 
-        $collectionName = $this->params()->fromRoute('collection');
-        if (!$this->assetManager->has($collectionName)) {
+        $resourceName = $collectionName = $this->params()->fromRoute('collection');
+        $collectionConfig = array();
+
+        if (!isset($this->config[$resourceName])) {
             $response->setStatusCode(404);
             return;
         }
 
+        $collectionConfig = $this->config[$resourceName];
+        $collectionName   = $collectionConfig['collectionName'];
+
         $collection = $this->assetManager->get($collectionName);
         $response->setContent($collection->dump());
-        $response->getHeaders()->addHeaderLine('Last-Modified', '@' . $collection->getLastModified());
+        $headers = $response->getHeaders();
+        if (null !== $collection->getLastModified()) {
+            $headers->addHeaderLine('Last-Modified', '@' . $collection->getLastModified());
+        }
 
+        if (isset($collectionConfig['Content-Type'])) {
+            $headers->addHeaderLine(
+                'Content-Type',
+                $collectionConfig['Content-Type']
+            );
+        } else {
+            $extension = pathinfo($resourceName, PATHINFO_EXTENSION);
+            if (null !== $extension && isset($this->contentTypeMap[$extension])) {
+                $headers->addHeaderLine(
+                    'Content-Type',
+                    $this->contentTypeMap[$extension]
+                );
+            }
+        }
 
         return $response;
     }
@@ -35,6 +61,19 @@ class AssetController extends AbstractActionController implements AssetManagerAw
     public function setAssetManager(AssetManager $assetManager)
     {
         $this->assetManager = $assetManager;
+        return $this;
+    }
+
+    public function setConfig($config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+
+    public function setContentTypeMap(array $contentTypeMap)
+    {
+        $this->contentTypeMap = $contentTypeMap;
         return $this;
     }
 }

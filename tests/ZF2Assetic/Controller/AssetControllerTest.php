@@ -28,6 +28,11 @@ class AssetControllerTestCase extends TestCase
         $this->event->setRouteMatch($this->routeMatch);
         $this->controller->setEvent($this->event);
         $this->controller->setAssetManager($this->assetManager);
+        $this->controller->setContentTypeMap(array(
+            'css' => 'text/css',
+            'js'  => 'application/javascript',
+            'png' => 'image/png',
+        ));
     }
 
     public function testUnknownAssetReturns404()
@@ -38,7 +43,6 @@ class AssetControllerTestCase extends TestCase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-
     public function testControllerIsAssetManagerAware()
     {
         $this->assertInstanceOf('ZF2Assetic\AssetManagerAwareInterface', $this->controller);
@@ -48,22 +52,109 @@ class AssetControllerTestCase extends TestCase
     {
         $css          = '.hidden {display: none;}';
         $asset        = new StringAsset($css);
-        $lastModified = strtotime('2013-04-22 18:12:23');
-        $asset->setLastModified($lastModified);
         $this->assetManager->set('base_css', $asset);
+        $this->controller->setConfig(array(
+            'base.css' => array(
+                'collectionName' => 'base_css'
+            )
+        ));
 
-        $this->routeMatch->setParam('collection', 'base_css');
+        $this->routeMatch->setParam('collection', 'base.css');
         $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($css, $response->getContent());
+    }
 
+
+    public function testLastModifiedHeaderIsAddedIfAvailable()
+    {
+        $asset        = new StringAsset('.hidden {display: none;}');
+        $lastModified = strtotime('2013-04-22 18:12:23');
+        $asset->setLastModified($lastModified);
+        $this->assetManager->set('base_css', $asset);
+        $this->controller->setConfig(array(
+            'base.css' => array(
+                'collectionName' => 'base_css'
+            )
+        ));
+
+        $this->routeMatch->setParam('collection', 'base.css');
+        $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
         $headers = $response->getHeaders();
-        $this->assertTrue($headers->has('Last-Modified'));
 
+        $this->assertTrue($headers->has('Last-Modified'));
         $header = $headers->get('Last-Modified');
         $this->assertEquals(strtotime($header->getFieldValue()), $lastModified);
+
+    }
+
+    public function testCanGuessContentTypeFromExtension()
+    {
+        $asset        = new StringAsset('.hidden {display: none;}');
+        $this->assetManager->set('base_css', $asset);
+
+        $this->controller->setConfig(array(
+            'base.css' => array(
+                'collectionName' => 'base_css',
+            )
+        ));
+
+        $this->routeMatch->setParam('collection', 'base.css');
+        $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
+        $headers = $response->getHeaders();
+
+        $this->assertTrue($headers->has('Content-Type'));
+        $header = $headers->get('Content-Type');
+        $this->assertEquals('text/css', $header->getFieldValue());
+    }
+
+    public function testCanSetContentType()
+    {
+        $asset        = new StringAsset('.hidden {display: none;}');
+        $this->assetManager->set('base_css', $asset);
+
+        $this->controller->setConfig(array(
+            'base.css' => array(
+                'collectionName' => 'base_css',
+                'Content-Type' => 'text/css',
+            )
+        ));
+
+        $this->routeMatch->setParam('collection', 'base.css');
+        $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
+        $headers = $response->getHeaders();
+
+        $this->assertTrue($headers->has('Content-Type'));
+        $header = $headers->get('Content-Type');
+        $this->assertEquals('text/css', $header->getFieldValue());
+    }
+
+
+    public function testManualContentTypeTakesPreference()
+    {
+        $asset        = new StringAsset('.hidden {display: none;}');
+        $this->assetManager->set('base_css', $asset);
+
+        $this->controller->setConfig(array(
+            'base.css' => array(
+                'collectionName' => 'base_css',
+                'Content-Type' => 'image/png',
+            )
+        ));
+
+        $this->routeMatch->setParam('collection', 'base.css');
+        $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
+        $headers = $response->getHeaders();
+
+        $this->assertTrue($headers->has('Content-Type'));
+        $header = $headers->get('Content-Type');
+        $this->assertEquals('image/png', $header->getFieldValue());
     }
 }
 
