@@ -22,9 +22,9 @@ class AssetManagerFactory implements FactoryInterface
             return $assetManager;
         }
 
-        $assetFactory = $serviceLocator->get('AsseticAssetFactory');
         foreach ($assetConfig['collections'] as $collectionName => $collectionConfig) {
 
+            $assetFactory = new \Assetic\Factory\AssetFactory($collectionConfig['root']);
             $assets  = isset($collectionConfig['assets'])  ? $collectionConfig['assets']  : array();
             $filters = isset($collectionConfig['filters']) ? $collectionConfig['filters'] : array();
             $options = isset($collectionConfig['options']) ? $collectionConfig['options'] : array();

@@ -51,11 +51,9 @@ class AssetManagerFactoryTest extends TestCase
             'zf2_assetic' => array(
                 'collections' => array(
                     'base_css' => array(
+                        'root' => __DIR__ . '/../assets/',
                         'assets' => array(
                             'css/test.css',
-                        ),
-                        'options' => array(
-                            'root' => __DIR__ . '/../assets/',
                         ),
                     ),
                 ),
