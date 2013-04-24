@@ -3,7 +3,8 @@
 namespace ZF2Assetic\Controller;
 
 use ZF2Assetic\AssetManagerAwareTrait,
-    ZF2Assetic\AssetManagerAwareInterface;
+    ZF2Assetic\AssetManagerAwareInterface,
+    ZF2Assetic\ContentTypeResolver;
 
 use Assetic\AssetManager;
 
@@ -47,11 +48,15 @@ class AssetController extends AbstractActionController implements AssetManagerAw
             );
         } else {
             $extension = pathinfo($resourceName, PATHINFO_EXTENSION);
-            if (null !== $extension && isset($this->contentTypeMap[$extension])) {
-                $headers->addHeaderLine(
-                    'Content-Type',
-                    $this->contentTypeMap[$extension]
-                );
+            try {
+                if ($extension) {
+                    $contentType = $this->contentTypeMap->resolve($extension);
+                    $headers->addHeaderLine(
+                        'Content-Type',
+                        $contentType
+                    );
+                }
+            } catch (\Exception $e) {
             }
         }
 
@@ -71,7 +76,7 @@ class AssetController extends AbstractActionController implements AssetManagerAw
     }
 
 
-    public function setContentTypeMap(array $contentTypeMap)
+    public function setContentTypeMap(ContentTypeResolver $contentTypeMap)
     {
         $this->contentTypeMap = $contentTypeMap;
         return $this;

@@ -2,7 +2,8 @@
 
 namespace ZF2AsseticTest\Controller;
 
-use ZF2Assetic\Controller\AssetController;
+use ZF2Assetic\Controller\AssetController,
+    ZF2Assetic\ContentTypeResolver;
 
 use Assetic\AssetManager,
     Assetic\Asset\StringAsset;
@@ -28,11 +29,12 @@ class AssetControllerTestCase extends TestCase
         $this->event->setRouteMatch($this->routeMatch);
         $this->controller->setEvent($this->event);
         $this->controller->setAssetManager($this->assetManager);
-        $this->controller->setContentTypeMap(array(
-            'css' => 'text/css',
-            'js'  => 'application/javascript',
-            'png' => 'image/png',
-        ));
+
+        $contenTypeResolver = new ContentTypeResolver();
+        $contenTypeResolver->addMapping('css', 'text/css');
+        $contenTypeResolver->addMapping('js', 'application/javascript');
+        $contenTypeResolver->addMapping('png', 'image/png');
+        $this->controller->setContentTypeMap($contenTypeResolver);
     }
 
     public function testUnknownAssetReturns404()
