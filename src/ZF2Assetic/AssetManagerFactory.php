@@ -26,10 +26,17 @@ class AssetManagerFactory implements FactoryInterface
 
             $assetFactory = new \Assetic\Factory\AssetFactory($collectionConfig['root']);
             $assets  = isset($collectionConfig['assets'])  ? $collectionConfig['assets']  : array();
-            $filters = isset($collectionConfig['filters']) ? $collectionConfig['filters'] : array();
             $options = isset($collectionConfig['options']) ? $collectionConfig['options'] : array();
 
-            $asset = $assetFactory->createAsset($assets, $filters, $options);
+            $asset = $assetFactory->createAsset($assets, array(), $options);
+
+            if (isset($collectionConfig['filters'])) {
+                foreach ($collectionConfig['filters'] as $filterService) {
+                    $filter = $serviceLocator->get($filterService);
+                    $asset->ensureFilter($filter);
+                }
+            }
+
             $assetManager->set($collectionName, $asset);
         }
         return $assetManager;

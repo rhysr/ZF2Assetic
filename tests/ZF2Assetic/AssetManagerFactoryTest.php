@@ -4,7 +4,8 @@ namespace ZF2AsseticTest;
 
 use ZF2Assetic\AssetManagerFactory;
 
-use Assetic\Factory\AssetFactory;
+use Assetic\Factory\AssetFactory,
+    Assetic\Filter\CssRewriteFilter;
 
 use Zend\ServiceManager\ServiceManager,
     Zend\ServiceManager\Config;
@@ -42,6 +43,21 @@ class AssetManagerFactoryTest extends TestCase
             $this->getBasicConfig()
         ));
         $this->assertTrue($assetManager->has('base_css'));
+    }
+
+    public function testManagerGetFiltersFromServiceManager()
+    {
+        $config = $this->getBasicConfig();
+        $config['zf2_assetic']['collections']['base_css']['filters'][] = 'AsseticCssRewriteFilter';
+        $serviceManager = $this->createServiceManager($config);
+        $filter = new CssRewriteFilter();
+        $serviceManager->setService('AsseticCssRewriteFilter', $filter);
+        $assetManager = $this->factory->createService($serviceManager);
+        $asset = $assetManager->get('base_css');
+
+        $filters = $asset->getFilters();
+        $this->assertCount(1, $filters);
+        $this->assertSame($filter, $filters[0]);
     }
 
 
