@@ -17,7 +17,13 @@ class AssetController extends AbstractActionController implements AssetManagerAw
 
     protected $config = array();
 
-    protected $contentTypeMap = array();
+    /**
+     * Resolve file extension to http Content-Type header value
+     *
+     * @var \ZF2Assetic\ContentTypeResolver
+     */
+    protected $contentTypeResolver;
+
 
     public function indexAction()
     {
@@ -48,15 +54,11 @@ class AssetController extends AbstractActionController implements AssetManagerAw
             );
         } else {
             $extension = pathinfo($resourceName, PATHINFO_EXTENSION);
-            try {
-                if ($extension) {
-                    $contentType = $this->contentTypeMap->resolve($extension);
-                    $headers->addHeaderLine(
-                        'Content-Type',
-                        $contentType
-                    );
-                }
-            } catch (\Exception $e) {
+            if ($extension && $this->contentTypeResolve->hasMapping($extension)) {
+                $headers->addHeaderLine(
+                    'Content-Type',
+                    $this->contentTypeResolve->resolve($extension)
+                );
             }
         }
 
@@ -76,9 +78,9 @@ class AssetController extends AbstractActionController implements AssetManagerAw
     }
 
 
-    public function setContentTypeMap(ContentTypeResolver $contentTypeMap)
+    public function setContentTypeResolver(ContentTypeResolver $contentTypeResolver)
     {
-        $this->contentTypeMap = $contentTypeMap;
+        $this->contentTypeResolver = $contentTypeResolver;
         return $this;
     }
 }

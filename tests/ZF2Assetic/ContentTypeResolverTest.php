@@ -35,15 +35,22 @@ class ContentTypeResolverTest extends TestCase
         $this->assertEquals('application/javascript', $contentType);
     }
 
+    public function testHasMappingIsTrueWhenMappingExists()
+    {
+        $this->assertTrue($this->resolver->hasMapping('css'));
+    }
+
+    public function testHasMappingIsFalseWhenNoMappingExists()
+    {
+        $this->assertFalse($this->resolver->hasMapping('png'));
+    }
+
     public function testCanDynamicallyAddMapping()
     {
-        try {
-            $this->resolver->resolve('png');
-            $this->fail('Should not be able to resolve png');
-        } catch (\ZF2Assetic\InvalidArgumentException $e) {
-        }
-
+        $this->assertFalse($this->resolver->hasMapping('png'));
         $this->resolver->addMapping('png', 'image/png');
+        $this->assertTrue($this->resolver->hasMapping('png'));
+
         $contentType = $this->resolver->resolve('png');
         $this->assertEquals('image/png', $contentType);
     }

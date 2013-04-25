@@ -30,11 +30,11 @@ class AssetControllerTestCase extends TestCase
         $this->controller->setEvent($this->event);
         $this->controller->setAssetManager($this->assetManager);
 
-        $contenTypeResolver = new ContentTypeResolver();
-        $contenTypeResolver->addMapping('css', 'text/css');
-        $contenTypeResolver->addMapping('js', 'application/javascript');
-        $contenTypeResolver->addMapping('png', 'image/png');
-        $this->controller->setContentTypeMap($contenTypeResolver);
+        $contentTypeResolver = new ContentTypeResolver();
+        $contentTypeResolver->addMapping('css', 'text/css');
+        $contentTypeResolver->addMapping('js', 'application/javascript');
+        $contentTypeResolver->addMapping('png', 'image/png');
+        $this->controller->setContentTypeResolver($contentTypeResolver);
     }
 
     public function testUnknownAssetReturns404()

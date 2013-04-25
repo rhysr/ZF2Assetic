@@ -8,7 +8,7 @@ class ContentTypeResolver
 
     public function resolve($extension)
     {
-        $extension = strtolower($extension);
+        $extension = $this->normaliseExtension($extension);
         if (isset($this->map[$extension])) {
             return $this->map[$extension];
         }
@@ -19,7 +19,17 @@ class ContentTypeResolver
 
     public function addMapping($extension, $contentType)
     {
-        $this->map[strtolower($extension)] = $contentType;
+        $this->map[$this->normaliseExtension($extension)] = $contentType;
+    }
+
+    public function hasMapping($extension)
+    {
+        return isset($this->map[strtolower($extension)]);
+    }
+
+    private function normaliseExtension($extension)
+    {
+        return strtolower($extension);
     }
 }
 
