@@ -38,6 +38,9 @@ class Module
                         $config = $pluginManager->getServiceLocator()->get('config');
                         $controller->setConfig($config['zf2_assetic']['collections']);
                     }
+                    if ($controller instanceof ContentTypeResolverAwareInterface) {
+                        $controller->setContentTypeResolver($pluginManager->getServiceLocator()->get('AsseticContentTypeResolver'));
+                    }
                 },
             ),
         );

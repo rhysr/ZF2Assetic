@@ -3,6 +3,7 @@
 namespace ZF2Assetic\Controller;
 
 use ZF2Assetic\AssetManagerAwareTrait,
+    ZF2Assetic\ContentTypeResolverAwareInterface,
     ZF2Assetic\AssetManagerAwareInterface,
     ZF2Assetic\ContentTypeResolver;
 
@@ -11,7 +12,9 @@ use Assetic\AssetManager;
 use Zend\Mvc\Controller\AbstractActionController;
 
 
-class AssetController extends AbstractActionController implements AssetManagerAwareInterface
+class AssetController extends AbstractActionController implements
+    AssetManagerAwareInterface,
+    ContentTypeResolverAwareInterface
 {
     protected $assetManager;
 

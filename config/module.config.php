@@ -17,6 +17,15 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'AsseticAssetManager' => 'ZF2Assetic\AssetManagerFactory',
+            //TODO: move this to factory class with unit test
+            'AsseticContentTypeResolver' => function ($sm) {
+                $resolver = new \ZF2Assetic\ContentTypeResolver();
+                $resolver->addMapping('css', 'text/css');
+                $resolver->addMapping('js', 'application/javascript');
+                $resolver->addMapping('png', 'image/png');
+
+                return $resolver;
+            },
         ),
     ),
     'controllers' => array(
