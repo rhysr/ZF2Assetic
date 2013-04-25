@@ -5,9 +5,17 @@ Assetic module for Zend Framework 2
 
 ## TODO
 
- - [ ] asset controller
- - [ ] asset dump script
- - [ ] set correct http Content-Type headers on controller output
- - [ ] better asset factory config
- - [ ] get filter manager
- - [ ] be able to resolve *.{css,js} collection route param into collection name (which doesn't like a dot in the name)
+ - asset controller
+  - Custom header injection in collection config
+  - If-Modified-Since support
+  - Expires
+  - ~~Content-Type~~
+  - ~~Last-Modified~~
+  - Etags
+ - asset dump script
+ - better asset factory config
+ - ~~get filter manager~~
+   - ~~not needed, use the service manager~~
+ - Investigate feasiblity of creating AsseticFilterPluginManager
+ - ~~resolve *.{css,js} collection route param into collection name (which doesn't like a dot in the name)~~
+ - view helper
