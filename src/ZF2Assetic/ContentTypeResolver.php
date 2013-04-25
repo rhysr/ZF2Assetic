@@ -12,7 +12,9 @@ class ContentTypeResolver
         if (isset($this->map[$extension])) {
             return $this->map[$extension];
         }
-        throw new UnknownContentTypeException($extension);
+        throw new InvalidArgumentException(
+            'Cannot resolve ' . var_export($extension, true) . ' to content type'
+        );
     }
 
     public function addMapping($extension, $contentType)
@@ -20,6 +22,4 @@ class ContentTypeResolver
         $this->map[strtolower($extension)] = $contentType;
     }
 }
-
-class UnknownContentTypeException extends \Exception {}
 

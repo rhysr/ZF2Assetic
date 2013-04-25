@@ -19,7 +19,7 @@ class ContentTypeResolverTest extends TestCase
 
     public function testThrowExceptionIfCantResolve()
     {
-        $this->setExpectedException('\\ZF2Assetic\\UnknownContentTypeException');
+        $this->setExpectedException('\\ZF2Assetic\\InvalidArgumentException');
         $this->resolver->resolve('unknown');
     }
 
@@ -40,7 +40,7 @@ class ContentTypeResolverTest extends TestCase
         try {
             $this->resolver->resolve('png');
             $this->fail('Should not be able to resolve png');
-        } catch (\ZF2Assetic\UnknownContentTypeException $e) {
+        } catch (\ZF2Assetic\InvalidArgumentException $e) {
         }
 
         $this->resolver->addMapping('png', 'image/png');
