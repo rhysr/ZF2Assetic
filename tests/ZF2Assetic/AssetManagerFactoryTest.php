@@ -48,7 +48,7 @@ class AssetManagerFactoryTest extends TestCase
     public function testManagerGetFiltersFromServiceManager()
     {
         $config = $this->getBasicConfig();
-        $config['zf2_assetic']['collections']['base_css']['filters'][] = 'AsseticCssRewriteFilter';
+        $config['zf2_assetic']['collections']['base.css']['filters'][] = 'AsseticCssRewriteFilter';
         $serviceManager = $this->createServiceManager($config);
         $filter = new CssRewriteFilter();
         $serviceManager->setService('AsseticCssRewriteFilter', $filter);
@@ -66,7 +66,8 @@ class AssetManagerFactoryTest extends TestCase
         return array(
             'zf2_assetic' => array(
                 'collections' => array(
-                    'base_css' => array(
+                    'base.css' => array(
+                        'collectionName' => 'base_css',
                         'root' => __DIR__ . '/../assets/',
                         'assets' => array(
                             'css/test.css',

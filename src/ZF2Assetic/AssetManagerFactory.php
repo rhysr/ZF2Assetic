@@ -37,7 +37,7 @@ class AssetManagerFactory implements FactoryInterface
                 }
             }
 
-            $assetManager->set($collectionName, $asset);
+            $assetManager->set($collectionConfig['collectionName'], $asset);
         }
         return $assetManager;
     }

@@ -1,14 +1,15 @@
 <?php
 return array(
     'service_manager' => array(
-        'factories' => array(
+        'invokables' => array(
             //TODO: create factories
-            'AsseticCssRewriteFilter' => 'ZF2Assetic\Factory\CssRewriteFilterFactory',
+            'AsseticCssRewriteFilter' => 'Assetic\Filter\CssRewriteFilter',
         ),
     ),
     'zf2_assetic' => array(
         'collections' => array(
-            'base_css' => array(
+            'base.css' => array(
+                'collectionName' => 'base_css',
                 'root' => __DIR__ . '/../assets/',
                 'assets' => array(
                     'css/test.css',
