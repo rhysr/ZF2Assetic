@@ -54,10 +54,10 @@ class AssetController extends AbstractActionController implements AssetManagerAw
             );
         } else {
             $extension = pathinfo($resourceName, PATHINFO_EXTENSION);
-            if ($extension && $this->contentTypeResolve->hasMapping($extension)) {
+            if ($extension && $this->contentTypeResolver->hasMapping($extension)) {
                 $headers->addHeaderLine(
                     'Content-Type',
-                    $this->contentTypeResolve->resolve($extension)
+                    $this->contentTypeResolver->resolve($extension)
                 );
             }
         }
