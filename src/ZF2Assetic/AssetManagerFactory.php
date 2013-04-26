@@ -25,6 +25,7 @@ class AssetManagerFactory implements FactoryInterface
         foreach ($assetConfig['collections'] as $collectionName => $collectionConfig) {
 
             $assetFactory = new \Assetic\Factory\AssetFactory($collectionConfig['root']);
+            $assetFactory->setAssetManager($assetManager);
             $assets  = isset($collectionConfig['assets'])  ? $collectionConfig['assets']  : array();
             $options = isset($collectionConfig['options']) ? $collectionConfig['options'] : array();
 

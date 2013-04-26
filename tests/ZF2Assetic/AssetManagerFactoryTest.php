@@ -60,6 +60,23 @@ class AssetManagerFactoryTest extends TestCase
         $this->assertSame($filter, $filters[0]);
     }
 
+    public function testCanCreateAssetsWhichDependOnOtherAssets()
+    {
+        $config = $this->getBasicConfig();
+        $config['zf2_assetic']['collections']['dependent.js'] = array(
+            'collectionName' => 'dependent_js',
+            'root' => __DIR__ . '/../assets/',
+            'assets' => array(
+                '@base_js',
+                'js/test.js',
+            ),
+        );
+        $serviceManager = $this->createServiceManager($config);
+        $assetManager = $this->factory->createService($serviceManager);
+        $asset = $assetManager->get('dependent_js');
+        $this->assertCount(2, $asset->all());
+    }
+
 
     protected function getBasicConfig()
     {
@@ -71,6 +88,13 @@ class AssetManagerFactoryTest extends TestCase
                         'root' => __DIR__ . '/../assets/',
                         'assets' => array(
                             'css/test.css',
+                        ),
+                    ),
+                    'base.js' => array(
+                        'collectionName' => 'base_js',
+                        'root' => __DIR__ . '/../assets/',
+                        'assets' => array(
+                            'js/test.js',
                         ),
                     ),
                 ),
