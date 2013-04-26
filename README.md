@@ -19,3 +19,6 @@ Assetic module for Zend Framework 2
  - Investigate feasiblity of creating AsseticFilterPluginManager
  - ~~resolve *.{css,js} collection route param into collection name (which doesn't like a dot in the name)~~
  - view helper
+ - handle paths inside route
+   - cssrewritefilter url() might have a deeper path
+   - /asset/bootstrap/img/glyphicons-halflings.png
