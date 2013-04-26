@@ -5,4 +5,10 @@
             <directory>./ZF2Assetic</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true" addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../src/</directory>
+            <file>../Module.php</file>
+        </whitelist>
+    </filter>
 </phpunit>
