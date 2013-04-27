@@ -64,6 +64,22 @@ class AssetControllerTestCase extends TestCase
     }
 
 
+    public function testResourcePathCanBeInSubDirectory()
+    {
+        $asset = $this->createSimpleTestAsset();
+        $asset->setTargetPath('css/some.css');
+        $this->assetManager->set('some_css', $asset);
+
+        $this->routeMatch->setParam('resourcePath', 'css/some.css');
+        $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
+        $headers  = $response->getHeaders();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals($asset->dump(), $response->getContent());
+    }
+
+
     public function testLastModifiedHeaderIsAddedIfAvailable()
     {
         $asset        = $this->createSimpleTestAsset();
