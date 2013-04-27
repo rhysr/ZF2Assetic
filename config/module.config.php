@@ -5,12 +5,12 @@ return array(
             'asset' => array(
                 'type' => 'regex',
                 'options' => array(
-                    'regex' => '/asset/(?<resource>.*)',
+                    'regex' => '/asset/(?<resourcePath>.*)',
                     'defaults' => array(
                         'controller' => 'asset',
                         'action'     => 'index',
                     ),
-                    'spec' => '/assets/%resource%',
+                    'spec' => '/assets/%resourcePath%',
                 ),
             ),
         ),

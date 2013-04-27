@@ -31,8 +31,8 @@ class AssetController extends AbstractActionController implements
     {
         $response = $this->getResponse();
 
-        $resourceName = $this->params()->fromRoute('resource');
-        $asset = $this->findAsset($resourceName);
+        $resourcePath = $this->params()->fromRoute('resourcePath');
+        $asset = $this->findAsset($resourcePath);
         if (!$asset) {
             $response->setStatusCode(404);
             return;
@@ -44,7 +44,7 @@ class AssetController extends AbstractActionController implements
             $headers->addHeaderLine('Last-Modified', '@' . $asset->getLastModified());
         }
 
-        $extension = pathinfo($resourceName, PATHINFO_EXTENSION);
+        $extension = pathinfo($resourcePath, PATHINFO_EXTENSION);
         if ($extension && $this->contentTypeResolver->hasMapping($extension)) {
             $headers->addHeaderLine(
                 'Content-Type',
@@ -55,7 +55,7 @@ class AssetController extends AbstractActionController implements
         return $response;
     }
 
-    private function findAsset($resourceName)
+    private function findAsset($resourcePath)
     {
         foreach ($this->assetManager->getNames() as $name) {
             $asset = $this->assetManager->get($name);
@@ -63,7 +63,7 @@ class AssetController extends AbstractActionController implements
                 throw new InvalidArgumentException('Asset ' . $name . ' has no target path');
             }
 
-            if ($resourceName == $asset->getTargetPath()) {
+            if ($resourcePath == $asset->getTargetPath()) {
                 return $asset;
             }
         }

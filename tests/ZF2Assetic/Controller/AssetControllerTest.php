@@ -39,7 +39,7 @@ class AssetControllerTestCase extends TestCase
 
     public function testUnknownAssetReturns404()
     {
-        $this->routeMatch->setParam('resource', 'does-not-exist.css');
+        $this->routeMatch->setParam('resourcePath', 'does-not-exist.css');
         $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $this->assertEquals(404, $response->getStatusCode());
@@ -55,7 +55,7 @@ class AssetControllerTestCase extends TestCase
         $asset = $this->createSimpleTestAsset();
         $this->assetManager->set('base_css', $asset);
 
-        $this->routeMatch->setParam('resource', 'base.css');
+        $this->routeMatch->setParam('resourcePath', 'base.css');
         $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
@@ -71,7 +71,7 @@ class AssetControllerTestCase extends TestCase
         $asset->setLastModified($lastModified);
         $this->assetManager->set('base_css', $asset);
 
-        $this->routeMatch->setParam('resource', 'base.css');
+        $this->routeMatch->setParam('resourcePath', 'base.css');
         $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $headers  = $response->getHeaders();
@@ -87,7 +87,7 @@ class AssetControllerTestCase extends TestCase
         $asset = $this->createSimpleTestAsset();
         $this->assetManager->set('base_css', $asset);
 
-        $this->routeMatch->setParam('resource', 'base.css');
+        $this->routeMatch->setParam('resourcePath', 'base.css');
         $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $headers  = $response->getHeaders();
@@ -105,7 +105,7 @@ class AssetControllerTestCase extends TestCase
         $asset->setTargetPath(null);
         $this->assetManager->set('base_css', $asset);
 
-        $this->routeMatch->setParam('resource', 'base.css');
+        $this->routeMatch->setParam('resourcePath', 'base.css');
         $this->controller->dispatch($this->request);
     }
 
