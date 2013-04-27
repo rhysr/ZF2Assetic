@@ -35,8 +35,6 @@ class Module
                 function ($controller, $pluginManager) {
                     if ($controller instanceof AssetManagerAwareInterface) {
                         $controller->setAssetManager($pluginManager->getServiceLocator()->get('AsseticAssetManager'));
-                        $config = $pluginManager->getServiceLocator()->get('config');
-                        $controller->setConfig($config['zf2_assetic']['collections']);
                     }
                     if ($controller instanceof ContentTypeResolverAwareInterface) {
                         $controller->setContentTypeResolver($pluginManager->getServiceLocator()->get('AsseticContentTypeResolver'));

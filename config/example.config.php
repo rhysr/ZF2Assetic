@@ -8,8 +8,7 @@ return array(
     ),
     'zf2_assetic' => array(
         'collections' => array(
-            'base.css' => array(
-                'collectionName' => 'base_css',
+            'base_css' => array(
                 'root' => __DIR__ . '/../assets/',
                 'assets' => array(
                     'css/test.css',
@@ -17,6 +16,9 @@ return array(
                 'filters' => array(
                     //service manager name
                     'AsseticCssRewriteFilter',
+                ),
+                'options' => array(
+                    'output' => 'base.css',
                 ),
             ),
         ),

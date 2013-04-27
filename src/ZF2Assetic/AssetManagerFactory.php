@@ -22,13 +22,16 @@ class AssetManagerFactory implements FactoryInterface
             return $assetManager;
         }
 
-        foreach ($assetConfig['collections'] as $collectionName => $collectionConfig) {
+        foreach ($assetConfig['collections'] as $assetName => $collectionConfig) {
 
             $assetFactory = new \Assetic\Factory\AssetFactory($collectionConfig['root']);
             $assetFactory->setAssetManager($assetManager);
             $assets  = isset($collectionConfig['assets'])  ? $collectionConfig['assets']  : array();
             $options = isset($collectionConfig['options']) ? $collectionConfig['options'] : array();
 
+            if (empty($options['output'])) {
+                throw new InvalidArgumentException('Asset: ' . $assetName . ' is missing output config');
+            }
             $asset = $assetFactory->createAsset($assets, array(), $options);
 
             if (isset($collectionConfig['filters'])) {
@@ -38,7 +41,7 @@ class AssetManagerFactory implements FactoryInterface
                 }
             }
 
-            $assetManager->set($collectionConfig['collectionName'], $asset);
+            $assetManager->set($assetName, $asset);
         }
         return $assetManager;
     }

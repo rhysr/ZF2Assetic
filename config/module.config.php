@@ -3,13 +3,14 @@ return array(
     'router' => array(
         'routes' => array(
             'asset' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'type' => 'regex',
                 'options' => array(
-                    'route'    => '/asset/:collection',
+                    'regex' => '/asset/(?<resource>.*)',
                     'defaults' => array(
                         'controller' => 'asset',
                         'action'     => 'index',
                     ),
+                    'spec' => '/assets/%resource%',
                 ),
             ),
         ),

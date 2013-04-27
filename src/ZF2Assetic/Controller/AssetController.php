@@ -3,6 +3,7 @@
 namespace ZF2Assetic\Controller;
 
 use ZF2Assetic\AssetManagerAwareTrait,
+    ZF2Assetic\InvalidArgumentException,
     ZF2Assetic\ContentTypeResolverAwareInterface,
     ZF2Assetic\AssetManagerAwareInterface,
     ZF2Assetic\ContentTypeResolver;
@@ -18,8 +19,6 @@ class AssetController extends AbstractActionController implements
 {
     protected $assetManager;
 
-    protected $config = array();
-
     /**
      * Resolve file extension to http Content-Type header value
      *
@@ -32,40 +31,42 @@ class AssetController extends AbstractActionController implements
     {
         $response = $this->getResponse();
 
-        $resourceName = $collectionName = $this->params()->fromRoute('collection');
-        $collectionConfig = array();
-
-        if (!isset($this->config[$resourceName])) {
+        $resourceName = $this->params()->fromRoute('resource');
+        $asset = $this->findAsset($resourceName);
+        if (!$asset) {
             $response->setStatusCode(404);
             return;
         }
 
-        $collectionConfig = $this->config[$resourceName];
-        $collectionName   = $collectionConfig['collectionName'];
-
-        $collection = $this->assetManager->get($collectionName);
-        $response->setContent($collection->dump());
+        $response->setContent($asset->dump());
         $headers = $response->getHeaders();
-        if (null !== $collection->getLastModified()) {
-            $headers->addHeaderLine('Last-Modified', '@' . $collection->getLastModified());
+        if (null !== $asset->getLastModified()) {
+            $headers->addHeaderLine('Last-Modified', '@' . $asset->getLastModified());
         }
 
-        if (isset($collectionConfig['Content-Type'])) {
+        $extension = pathinfo($resourceName, PATHINFO_EXTENSION);
+        if ($extension && $this->contentTypeResolver->hasMapping($extension)) {
             $headers->addHeaderLine(
                 'Content-Type',
-                $collectionConfig['Content-Type']
+                $this->contentTypeResolver->resolve($extension)
             );
-        } else {
-            $extension = pathinfo($resourceName, PATHINFO_EXTENSION);
-            if ($extension && $this->contentTypeResolver->hasMapping($extension)) {
-                $headers->addHeaderLine(
-                    'Content-Type',
-                    $this->contentTypeResolver->resolve($extension)
-                );
-            }
         }
 
         return $response;
+    }
+
+    private function findAsset($resourceName)
+    {
+        foreach ($this->assetManager->getNames() as $name) {
+            $asset = $this->assetManager->get($name);
+            if (!$asset->getTargetPath()) {
+                throw new InvalidArgumentException('Asset ' . $name . ' has no target path');
+            }
+
+            if ($resourceName == $asset->getTargetPath()) {
+                return $asset;
+            }
+        }
     }
 
     public function setAssetManager(AssetManager $assetManager)
@@ -73,13 +74,6 @@ class AssetController extends AbstractActionController implements
         $this->assetManager = $assetManager;
         return $this;
     }
-
-    public function setConfig($config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
 
     public function setContentTypeResolver(ContentTypeResolver $contentTypeResolver)
     {
