@@ -70,12 +70,10 @@ class AssetManagerFactoryTest extends TestCase
     public function testManagerGetFiltersFromServiceManager()
     {
         $config         = $this->getBasicConfig();
-        $config['zf2_assetic']['collections']['base_css']['filters'][] = 'AsseticCssRewriteFilter';
         $serviceManager = $this->createServiceManager($config);
-        $filter         = new CssRewriteFilter();
-        $serviceManager->setService('AsseticCssRewriteFilter', $filter);
+        $filter         = $serviceManager->get('AsseticCssRewriteFilter');
         $assetManager   = $this->factory->createService($serviceManager);
-        $asset          = $assetManager->get('base_css');
+        $asset          = $assetManager->get('filtered_css');
 
         $filters        = $asset->getFilters();
         $this->assertCount(1, $filters);
@@ -84,7 +82,7 @@ class AssetManagerFactoryTest extends TestCase
 
     public function testCanCreateAssetsWhichDependOnOtherAssets()
     {
-        $config         = $this->getDependentConfig();
+        $config         = $this->getBasicConfig();
         $serviceManager = $this->createServiceManager($config);
         $assetManager   = $this->factory->createService($serviceManager);
         $asset          = $assetManager->get('dependent_js');
@@ -94,47 +92,7 @@ class AssetManagerFactoryTest extends TestCase
 
     protected function getBasicConfig()
     {
-        return array(
-            'zf2_assetic' => array(
-                'collections' => array(
-                    'base_css' => array(
-                        'root' => __DIR__ . '/../assets/',
-                        'assets' => array(
-                            'css/test.css',
-                        ),
-                        'options' => array(
-                            'output' => 'base.css',
-                        ),
-                    ),
-                    'base_js' => array(
-                        'collectionName' => 'base_js',
-                        'root' => __DIR__ . '/../assets/',
-                        'assets' => array(
-                            'js/test.js',
-                        ),
-                        'options' => array(
-                            'output' => 'base.js',
-                        ),
-                    ),
-                ),
-            ),
-        );
-    }
-
-    protected function getDependentConfig()
-    {
-        $config = $this->getBasicConfig();
-        $config['zf2_assetic']['collections']['dependent_js'] = array(
-            'root' => __DIR__ . '/../assets/',
-            'assets' => array(
-                '@base_js',
-                'js/test.js',
-            ),
-            'options' => array(
-                'output' => 'dependent.js',
-            ),
-        );
-        return $config;
+        return require __DIR__ . '/../config/basic.config.php';
     }
 
     protected function createServiceManager(array $config)
@@ -143,6 +101,7 @@ class AssetManagerFactoryTest extends TestCase
         $serviceManager->setService('Configuration', $config);
         $serviceManager->setAlias('Config', 'Configuration');
         $serviceManager->setService('AsseticAssetFactory', new AssetFactory(__DIR__));
+        $serviceManager->setService('AsseticCssRewriteFilter', new CssRewriteFilter());
         return $serviceManager;
     }
 }
