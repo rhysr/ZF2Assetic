@@ -4,7 +4,7 @@ namespace ZF2Assetic;
 
 class ContentTypeResolver
 {
-    private $map = array();
+    protected $map = array();
 
     public function resolve($extension)
     {
@@ -27,7 +27,7 @@ class ContentTypeResolver
         return isset($this->map[strtolower($extension)]);
     }
 
-    private function normaliseExtension($extension)
+    protected function normaliseExtension($extension)
     {
         return strtolower($extension);
     }

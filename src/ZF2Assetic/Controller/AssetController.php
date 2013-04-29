@@ -55,7 +55,7 @@ class AssetController extends AbstractActionController implements
         return $response;
     }
 
-    private function findAsset($resourcePath)
+    protected function findAsset($resourcePath)
     {
         foreach ($this->assetManager->getNames() as $name) {
             $asset = $this->assetManager->get($name);
