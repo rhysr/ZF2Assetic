@@ -45,6 +45,12 @@ return array(
                 ),
             ),
         ),
+        'contentTypeMap' => array(
+            'css' => 'text/css',
+            'js'  => 'application/js',
+            'jpg' => 'image/jpeg',
+            'png' => 'image/png',
+        ),
     ),
 );
 

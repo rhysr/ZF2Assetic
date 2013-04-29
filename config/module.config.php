@@ -17,16 +17,8 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'AsseticAssetManager' => 'ZF2Assetic\AssetManagerFactory',
-            //TODO: move this to factory class with unit test
-            'AsseticContentTypeResolver' => function ($sm) {
-                $resolver = new \ZF2Assetic\ContentTypeResolver();
-                $resolver->addMapping('css', 'text/css');
-                $resolver->addMapping('js', 'application/javascript');
-                $resolver->addMapping('png', 'image/png');
-
-                return $resolver;
-            },
+            'AsseticAssetManager'        => 'ZF2Assetic\AssetManagerFactory',
+            'AsseticContentTypeResolver' => 'ZF2Assetic\ContentTypeResolverFactory',
         ),
     ),
     'controllers' => array(
@@ -35,6 +27,15 @@ return array(
         ),
     ),
     'zf2_assetic' => array(
+        'contentTypeMap' => array(
+            'css'  => 'text/css',
+            'js'   => 'application/javascript',
+            'gif'  => 'image/gif',
+            'ico'  => 'image/x-icon',
+            'jpeg' => 'image/jpeg',
+            'jpg'  => 'image/jpeg',
+            'png'  => 'image/png',
+        ),
     ),
 );
 
