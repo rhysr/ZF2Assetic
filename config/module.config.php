@@ -5,7 +5,7 @@ return array(
             'asset' => array(
                 'type' => 'regex',
                 'options' => array(
-                    'regex' => '/asset/(?<resourcePath>.*)',
+                    'regex' => '/assets/(?<resourcePath>.*)',
                     'defaults' => array(
                         'controller' => 'asset',
                         'action'     => 'index',
@@ -24,6 +24,18 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'asset'         => 'ZF2Assetic\Controller\AssetController',
+        ),
+    ),
+    'view_helpers' => array(
+        'factories' => array(
+            'assetPath' => function ($pm) {
+                $sm = $pm->getServiceLocator();
+                return new \ZF2Assetic\View\Helper\AssetPath(
+                    $sm->get('AsseticAssetManager'),
+                    $sm->get('router'),
+                    'asset'
+                );
+            },
         ),
     ),
     'zf2_assetic' => array(
