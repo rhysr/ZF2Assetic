@@ -55,6 +55,11 @@ class AssetPathTest extends TestCase
         $this->helper->getAssetPath('test_css');
     }
 
+    public function testCanGetRouteName()
+    {
+        $this->assertEquals('asset', $this->helper->getRouteName());
+    }
+
     protected function createAssetManager()
     {
         $asset = new FileAsset(__DIR__ . '/../../../tests/test.css');

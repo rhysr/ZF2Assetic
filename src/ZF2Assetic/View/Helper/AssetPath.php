@@ -79,5 +79,10 @@ class AssetPath extends AbstractHelper
         $this->routeName = $routeName;
         return $this;
     }
+
+    public function getRouteName()
+    {
+        return $this->routeName;
+    }
 }
 
