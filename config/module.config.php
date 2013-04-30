@@ -28,14 +28,7 @@ return array(
     ),
     'view_helpers' => array(
         'factories' => array(
-            'assetPath' => function ($pm) {
-                $sm = $pm->getServiceLocator();
-                return new \ZF2Assetic\View\Helper\AssetPath(
-                    $sm->get('AsseticAssetManager'),
-                    $sm->get('router'),
-                    'asset'
-                );
-            },
+            'assetPath' => 'ZF2Assetic\View\Helper\AssetPathFactory',
         ),
     ),
     'zf2_assetic' => array(
