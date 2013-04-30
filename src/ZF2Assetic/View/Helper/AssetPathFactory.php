@@ -2,6 +2,8 @@
 
 namespace ZF2Assetic\View\Helper;
 
+use ZF2Assetic\InvalidArgumentException;
+
 use Zend\ServiceManager\FactoryInterface,
     Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -11,6 +13,9 @@ class AssetPathFactory implements FactoryInterface
     {
         $serviceManager = $viewHelperManager->getServiceLocator();
         $config         = $serviceManager->get('Config');
+        if (!isset($config['zf2_assetic']['controllerRouteName'])) {
+            throw new InvalidArgumentException('Missing \'controllerRouteName\' config');
+        }
 
         $helper         = new AssetPath(
             $serviceManager->get('AsseticAssetManager'),

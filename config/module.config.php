@@ -32,7 +32,8 @@ return array(
         ),
     ),
     'zf2_assetic' => array(
-        'contentTypeMap' => array(
+        'controllerRouteName' => 'asset',
+        'contentTypeMap'      => array(
             'css'  => 'text/css',
             'js'   => 'application/javascript',
             'gif'  => 'image/gif',

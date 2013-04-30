@@ -56,5 +56,18 @@ class AssetPathFactoryTest extends TestCase
         $helper = $this->factory->createService($this->pluginManager);
         $this->assertEquals('assetic', $helper->getRouteName());
     }
+
+    public function testThrowsExceptionIfControllerRouteNameNotSet()
+    {
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('AsseticAssetManager', $this->assetManager);
+        $serviceManager->setService('router', $this->router);
+        $this->pluginManager->setServiceLocator($serviceManager);
+
+        $this->setExpectedException('\\ZF2Assetic\\InvalidArgumentException');
+        $serviceManager->setService('Configuration', array());
+        $serviceManager->setAlias('Config', 'Configuration');
+        $helper = $this->factory->createService($this->pluginManager);
+    }
 }
 
