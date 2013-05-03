@@ -4,12 +4,6 @@ namespace ZF2AsseticTest\View\Helper;
 
 use ZF2Assetic\View\Helper\AssetDiskPath;
 
-//use Assetic\Asset\FileAsset,
-//    Assetic\AssetManager;
-
-use Zend\Mvc\Router\Http\Regex AS RegexRoute,
-    Zend\Mvc\Router\Http\TreeRouteStack;
-
 use PHPUnit_Framework_TestCase as TestCase;
 
 class AssetDiskPathTest extends TestCase
