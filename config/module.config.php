@@ -42,6 +42,7 @@ return array(
             'jpg'  => 'image/jpeg',
             'png'  => 'image/png',
         ),
+        'useAssetController' => true,
     ),
 );
 

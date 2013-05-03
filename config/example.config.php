@@ -7,6 +7,7 @@ return array(
         ),
     ),
     'zf2_assetic' => array(
+        'useAssetController' => false,
         'collections' => array(
             'base_css' => array(
                 'root' => __DIR__ . '/../assets/',

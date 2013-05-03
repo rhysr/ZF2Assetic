@@ -9,7 +9,8 @@ use ZF2Assetic\View\Helper\AssetPathFactory;
 use Zend\View\HelperPluginManager,
     Zend\Mvc\Router\Http\TreeRouteStack,
     Zend\ServiceManager\ServiceManager,
-    Zend\ServiceManager\Config;
+    Zend\ServiceManager\Config,
+    Zend\Config\Config as PhpConfig;
 
 use PHPUnit_Framework_TestCase as TestCase;
 
@@ -25,7 +26,14 @@ class AssetPathFactoryTest extends TestCase
 
     private $controllerModeConfig = array(
         'zf2_assetic' => array(
+            'useAssetController' => true,
             'controllerRouteName' => 'assetic',
+        ),
+    );
+
+    private $diskModeConfig = array(
+        'zf2_assetic' => array(
+            'useAssetController' => false,
         ),
     );
 
@@ -37,7 +45,19 @@ class AssetPathFactoryTest extends TestCase
         $this->routeName      = 'assetRoute';
     }
 
-    public function testFactoryCreatesViewHelper()
+    public function testFactoryRequiresModeConfig()
+    {
+        $serviceManager = $this->createServiceManager(array(
+            'zf2_assetic' => array(
+            )
+        ));
+        $pluginManager = $this->createPluginManager($serviceManager);
+
+        $this->setExpectedException('\\ZF2Assetic\\InvalidArgumentException');
+        $helper = $this->factory->createService($pluginManager);
+    }
+
+    public function testControllerModeFactoryCreatesControllerViewHelper()
     {
         $serviceManager = $this->createServiceManager($this->controllerModeConfig);
         $pluginManager = $this->createPluginManager($serviceManager);
@@ -46,7 +66,7 @@ class AssetPathFactoryTest extends TestCase
         $this->assertInstanceOf('\\ZF2Assetic\\View\\Helper\\AssetPath', $helper);
     }
 
-    public function testRouteNameCorrectlySet()
+    public function testRouteNameCorrectlySetForControllerMode()
     {
         $serviceManager = $this->createServiceManager($this->controllerModeConfig);
         $pluginManager = $this->createPluginManager($serviceManager);
@@ -65,6 +85,25 @@ class AssetPathFactoryTest extends TestCase
         $helper = $this->factory->createService($pluginManager);
     }
 
+    public function testOnDiskModeDiskHelper()
+    {
+        $serviceManager = $this->createServiceManager($this->diskModeConfig);
+        $pluginManager = $this->createPluginManager($serviceManager);
+
+        $helper = $this->factory->createService($pluginManager);
+        $this->assertInstanceOf('\\ZF2Assetic\\View\\Helper\\AssetDiskPath', $helper);
+    }
+
+    public function testAssetDiskModePopulatedFromAssetManifest()
+    {
+        $serviceManager = $this->createServiceManager($this->diskModeConfig);
+        $pluginManager = $this->createPluginManager($serviceManager);
+
+        $helper = $this->factory->createService($pluginManager);
+        $this->assertEquals('/assets/css/test.css', $helper->getAssetPath('test_css'));
+    }
+
+
     public function createServiceManager($config)
     {
         $serviceManager = new ServiceManager();
@@ -72,6 +111,7 @@ class AssetPathFactoryTest extends TestCase
         $serviceManager->setService('router', $this->router);
         $serviceManager->setService('Configuration', $config);
         $serviceManager->setAlias('Config', 'Configuration');
+        $serviceManager->setService('AssetManifest', $this->createAssetManifest($config));
         return $serviceManager;
     }
 
@@ -80,6 +120,15 @@ class AssetPathFactoryTest extends TestCase
         $pluginManager  = new HelperPluginManager();
         $pluginManager->setServiceLocator($serviceManager);
         return $pluginManager;
+    }
+
+    public function createAssetManifest($config)
+    {
+        $config = new PhpConfig(array(), true);
+        $config->assets           = array();
+        $config->assets->test_css = '/assets/css/test.css';
+        $config->assets->test_js  = '/assets/js/test.js';
+        return $config;
     }
 }
 
