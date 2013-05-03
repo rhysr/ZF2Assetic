@@ -1,0 +1,6 @@
+{
+    "assets": {
+        "test_css": "/assets/css/test.css",
+        "test_js": "/assets/js/test.js"
+    }
+}

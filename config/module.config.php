@@ -17,6 +17,7 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
+            'AssetManifest'              => 'ZF2Assetic\AssetManifestFactory',
             'AsseticAssetManager'        => 'ZF2Assetic\AssetManagerFactory',
             'AsseticContentTypeResolver' => 'ZF2Assetic\ContentTypeResolverFactory',
         ),

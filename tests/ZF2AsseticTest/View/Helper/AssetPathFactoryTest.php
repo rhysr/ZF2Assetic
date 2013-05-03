@@ -9,8 +9,7 @@ use ZF2Assetic\View\Helper\AssetPathFactory;
 use Zend\View\HelperPluginManager,
     Zend\Mvc\Router\Http\TreeRouteStack,
     Zend\ServiceManager\ServiceManager,
-    Zend\ServiceManager\Config,
-    Zend\Config\Config as PhpConfig;
+    Zend\ServiceManager\Config;
 
 use PHPUnit_Framework_TestCase as TestCase;
 
@@ -124,11 +123,12 @@ class AssetPathFactoryTest extends TestCase
 
     public function createAssetManifest($config)
     {
-        $config = new PhpConfig(array(), true);
-        $config->assets           = array();
-        $config->assets->test_css = '/assets/css/test.css';
-        $config->assets->test_js  = '/assets/js/test.js';
-        return $config;
+        return array(
+            'assets' => array(
+                'test_css' => '/assets/css/test.css',
+                'test_js'  => '/assets/js/test.js',
+            )
+        );
     }
 }
 

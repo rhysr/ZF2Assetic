@@ -47,7 +47,7 @@ class AssetPathFactory implements FactoryInterface
         $helper         = new AssetDiskPath();
 
         $manifest       = $serviceManager->get('AssetManifest');
-        foreach ($manifest->assets as $assetName => $path) {
+        foreach ($manifest['assets'] as $assetName => $path) {
             $helper->addMapping($assetName, $path);
         }
         return $helper;
