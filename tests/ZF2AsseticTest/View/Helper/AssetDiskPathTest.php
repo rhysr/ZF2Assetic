@@ -42,6 +42,7 @@ class AssetDiskPathTest extends TestCase
     public function testInvokingHelperReturnsSameAsGetAssetPathMethod()
     {
         $helper = $this->helper;
+        $this->helper->addMapping('test_css', '/assets/css/test.css');
         $this->assertEquals($helper('test_css'), $this->helper->getAssetPath('test_css'));
     }
 }
