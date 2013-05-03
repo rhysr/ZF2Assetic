@@ -13,9 +13,7 @@ class AssetDiskPath extends AbstractHelper
      *
      * @var array
      */
-    private $assetPathMap = array(
-        'test_css' => '/assets/css/test.css',
-    );
+    private $assetPathMap = array();
 
     /**
      * @see getAssetPath
