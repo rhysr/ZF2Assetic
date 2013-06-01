@@ -15,6 +15,22 @@ return array(
             ),
         ),
     ),
+    'console' => array(
+        'router' => array(
+            'routes' => array(
+                'asset-dump' => array(
+                    'type' => 'simple',
+                    'options' => array(
+                        'route' => 'assets dump',
+                        'defaults' => array(
+                            'controller' => 'assetconsole',
+                            'action'     => 'dump',
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ),
     'service_manager' => array(
         'factories' => array(
             'AssetManifest'              => 'ZF2Assetic\AssetManifestFactory',
@@ -25,6 +41,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'asset'         => 'ZF2Assetic\Controller\AssetController',
+            'assetconsole'  => 'ZF2Assetic\Controller\AssetConsoleController',
         ),
     ),
     'view_helpers' => array(
