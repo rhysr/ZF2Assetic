@@ -15,6 +15,14 @@ class AssetDiskPathTest extends TestCase
         $this->helper = new AssetDiskPath();
     }
 
+    public function testInstanceOfAssetPathInterface()
+    {
+        $this->assertInstanceOf(
+            '\\ZF2Assetic\\View\\Helper\\AssetPathInterface',
+            $this->helper
+        );
+    }
+
     public function testThrowsExceptionIfUnableToFindAsset()
     {
         $this->setExpectedException('\\ZF2Assetic\\InvalidArgumentException');

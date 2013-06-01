@@ -10,7 +10,7 @@ use ZF2Assetic\InvalidArgumentException,
 
 use Assetic\AssetManager;
 
-class AssetPath extends AbstractHelper
+class AssetPath extends AbstractHelper implements AssetPathInterface
 {
     /**
      * Asset manager

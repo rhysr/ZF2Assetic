@@ -6,7 +6,7 @@ use Zend\View\Helper\AbstractHelper;
 
 use ZF2Assetic\InvalidArgumentException;
 
-class AssetDiskPath extends AbstractHelper
+class AssetDiskPath extends AbstractHelper implements AssetPathInterface
 {
     /**
      * Mapping of asset name to public relative path

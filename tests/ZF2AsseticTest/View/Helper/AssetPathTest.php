@@ -23,6 +23,14 @@ class AssetPathTest extends TestCase
         $this->helper       = new AssetPath($this->assetManager, $this->router, 'asset');
     }
 
+    public function testInstanceOfAssetPathInterface()
+    {
+        $this->assertInstanceOf(
+            '\\ZF2Assetic\\View\\Helper\\AssetPathInterface',
+            $this->helper
+        );
+    }
+
     public function testThrowsExceptionIfUnableToFindAsset()
     {
         $this->setExpectedException('\\ZF2Assetic\\InvalidArgumentException');
