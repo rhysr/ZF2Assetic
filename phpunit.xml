@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="Bootstrap.php">
+<phpunit bootstrap="./tests/Bootstrap.php">
     <testsuites>
         <testsuite name="ZF2Assetic">
-            <directory>./ZF2AsseticTest</directory>
+            <directory>./tests/ZF2AsseticTest</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true" addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../src/</directory>
-            <file>../Module.php</file>
+            <directory suffix=".php">src/</directory>
+            <file>Module.php</file>
         </whitelist>
     </filter>
 </phpunit>
