@@ -2,8 +2,7 @@
 
 namespace ZF2Assetic\Controller;
 
-use ZF2Assetic\AssetManagerAwareTrait,
-    ZF2Assetic\InvalidArgumentException,
+use ZF2Assetic\InvalidArgumentException,
     ZF2Assetic\ContentTypeResolverAwareInterface,
     ZF2Assetic\AssetManagerAwareInterface,
     ZF2Assetic\ContentTypeResolver;
