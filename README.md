@@ -33,6 +33,27 @@ return array(
 );
 ```
 
+## Precompiling assets
+
+when useAssetController is true the assetPath view helper when generate paths to the disk based assets.
+Disk based assets need to be generated via the command line
+
+``` sh
+php public/index.php assets dump
+```
+This will generate a json manifest file containing a map of asset collection name to path which the view helper uses.
+When serving compiled assets from disk Assetic is not used in anyway.
+
+
+## View helper
+
+The module has two asset path helpers for generating paths. The useAssetController flag determines which view helper is created.
+One serves urls to the asset controller, the other gets paths from the json asset manifest. 
+
+``` php
+   <link href="<?= $this->assetPath('base_css') ?>" media="screen" rel="stylesheet" type="text/css">
+```
+
 ## TODO
 
  - console controller needs tests
