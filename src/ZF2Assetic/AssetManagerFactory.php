@@ -26,6 +26,9 @@ class AssetManagerFactory implements FactoryInterface
 
             $assetFactory = new \Assetic\Factory\AssetFactory($collectionConfig['root']);
             $assetFactory->setAssetManager($assetManager);
+            if ($this->canUseCacheBusterForCollection($assetConfig, $collectionConfig)) {
+                $assetFactory->addWorker($serviceLocator->get('AsseticCacheBuster'));
+            }
             $assets  = isset($collectionConfig['assets'])  ? $collectionConfig['assets']  : array();
             $options = isset($collectionConfig['options']) ? $collectionConfig['options'] : array();
 
@@ -44,6 +47,20 @@ class AssetManagerFactory implements FactoryInterface
             $assetManager->set($assetName, $asset);
         }
         return $assetManager;
+    }
+
+    protected function canUseCacheBusterForCollection($asseticConfig, $collectionConfig)
+    {
+        if (isset($collectionConfig['useCacheBuster']) && true === $collectionConfig['useCacheBuster']) {
+            return true;
+        }
+
+        if (isset($asseticConfig['useCacheBuster']) && $asseticConfig['useCacheBuster']) {
+            if (!isset($collectionConfig['useCacheBuster']) || true === $collectionConfig['useCacheBuster']) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

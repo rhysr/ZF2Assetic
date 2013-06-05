@@ -36,6 +36,7 @@ return array(
             'AssetManifest'              => 'ZF2Assetic\AssetManifestFactory',
             'AsseticAssetManager'        => 'ZF2Assetic\AssetManagerFactory',
             'AsseticContentTypeResolver' => 'ZF2Assetic\ContentTypeResolverFactory',
+            'AsseticCacheBuster'         => 'Assetic\Factory\Worker\CacheBustingWorker',
         ),
     ),
     'controllers' => array(
@@ -51,6 +52,7 @@ return array(
     ),
     'zf2_assetic' => array(
         'controllerRouteName' => 'asset',
+        'useCacheBuster'      => false,
         'contentTypeMap'      => array(
             'css'  => 'text/css',
             'js'   => 'application/javascript',

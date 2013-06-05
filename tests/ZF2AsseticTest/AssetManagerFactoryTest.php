@@ -5,7 +5,8 @@ namespace ZF2AsseticTest;
 use ZF2Assetic\AssetManagerFactory;
 
 use Assetic\Factory\AssetFactory,
-    Assetic\Filter\CssRewriteFilter;
+    Assetic\Filter\CssRewriteFilter,
+    Assetic\Factory\Worker\CacheBustingWorker;
 
 use Zend\ServiceManager\ServiceManager,
     Zend\ServiceManager\Config;
@@ -59,6 +60,15 @@ class AssetManagerFactoryTest extends TestCase
         $this->assertTrue($assetManager->has('base_css'));
     }
 
+    public function testOutputConfigSetsAssetTargetPath()
+    {
+        $config = $this->getBasicConfig();
+        $assetManager = $this->factory->createService($this->createServiceManager(
+            $config
+        ));
+        $this->assertEquals('base.css', $assetManager->get('base_css')->getTargetPath());
+    }
+
     public function testManagerGetsAssetPopulateFromAsset()
     {
         $assetManager = $this->factory->createService($this->createServiceManager(
@@ -89,6 +99,43 @@ class AssetManagerFactoryTest extends TestCase
         $this->assertCount(2, $asset->all());
     }
 
+    public function testCanUseCacheBusterOnAllAssets()
+    {
+        $config         = $this->getBasicConfig();
+        $config['zf2_assetic']['useCacheBuster'] = true;
+
+        $serviceManager = $this->createServiceManager($config);
+        $assetManager   = $this->factory->createService($serviceManager);
+
+        $asset = $assetManager->get('base_css');
+        $this->assertRegExp('#base-[a-z0-9]{7}.css#', $asset->getTargetPath());
+    }
+
+    public function testCanDisableCacheBusterOnCollection()
+    {
+        $config         = $this->getBasicConfig();
+        $config['zf2_assetic']['useCacheBuster'] = true;
+        $config['zf2_assetic']['collections']['base_css']['useCacheBuster'] = false;
+
+        $serviceManager = $this->createServiceManager($config);
+        $assetManager   = $this->factory->createService($serviceManager);
+
+        $asset = $assetManager->get('base_css');
+        $this->assertEquals('base.css', $asset->getTargetPath());
+    }
+
+
+    public function testCanEnableCacheBusterOnCollection()
+    {
+        $config         = $this->getBasicConfig();
+        $config['zf2_assetic']['collections']['base_css']['useCacheBuster'] = true;
+
+        $serviceManager = $this->createServiceManager($config);
+        $assetManager   = $this->factory->createService($serviceManager);
+
+        $asset = $assetManager->get('base_css');
+        $this->assertRegExp('#base-[a-z0-9]{7}.css#', $asset->getTargetPath());
+    }
 
     protected function getBasicConfig()
     {
@@ -102,6 +149,7 @@ class AssetManagerFactoryTest extends TestCase
         $serviceManager->setAlias('Config', 'Configuration');
         $serviceManager->setService('AsseticAssetFactory', new AssetFactory(__DIR__));
         $serviceManager->setService('AsseticCssRewriteFilter', new CssRewriteFilter());
+        $serviceManager->setService('AsseticCacheBuster', new CacheBustingWorker());
         return $serviceManager;
     }
 }
