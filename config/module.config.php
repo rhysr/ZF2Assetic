@@ -32,11 +32,13 @@ return array(
         ),
     ),
     'service_manager' => array(
+        'invokables' => array(
+            'AsseticCacheBuster'         => 'Assetic\Factory\Worker\CacheBustingWorker',
+        ),
         'factories' => array(
             'AssetManifest'              => 'ZF2Assetic\AssetManifestFactory',
             'AsseticAssetManager'        => 'ZF2Assetic\AssetManagerFactory',
             'AsseticContentTypeResolver' => 'ZF2Assetic\ContentTypeResolverFactory',
-            'AsseticCacheBuster'         => 'Assetic\Factory\Worker\CacheBustingWorker',
         ),
     ),
     'controllers' => array(
